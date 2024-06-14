@@ -1,12 +1,17 @@
 name: Build
 
+env:
+  Solution: .
+  Configuration: Release
+  Artifacts: build/${{env.Configuration}}
+  Branch: $env:GITHUB_REF_NAME"
+  
 on:
   push:
+    Branches: [ ${{env.Branch}} ]
+  pull_request:
+    Branches: [ ${{env.Branch}} ]
   workflow_dispatch:
-env:
-  SOLUTION_FILE_PATH: .
-  BUILD_CONFIGURATION: Release
-  ARTIFACT_PATH: build/${{env.BUILD_CONFIGURATION}}
 
 jobs:
   Windows:
@@ -27,15 +32,15 @@ jobs:
 
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+      run: nuget restore ${{env.Solution}}
 
     - name: Build
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+      run: msbuild /m /p:Configuration=${{env.Configuration}} ${{env.Solution}}
 
     - name: Compress artifacts
       uses: vimtor/action-zip@v1.1
       with:
-        files: ${{env.BUILD_CONFIGURATION}}/
+        files: ${{env.Configuration}}/
         dest: "build/${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
     - name: GitHub pre-release
