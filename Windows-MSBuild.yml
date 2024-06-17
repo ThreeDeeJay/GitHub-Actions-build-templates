@@ -40,7 +40,7 @@ jobs:
     - name: Compress artifacts
       uses: vimtor/action-zip@v1.1
       with:
-        files: ${{env.Configuration}}/
+        files: '${{env.Configuration}}/'
         dest: "build/${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
     - name: GitHub pre-release
