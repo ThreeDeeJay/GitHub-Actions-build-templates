@@ -2,6 +2,7 @@ name: Build
 
 env:
   Solution: .
+  Platform: Any CPU
   Configuration: Release
   Artifacts: build/$Configuration
   Branch: $env:GITHUB_REF_NAME
