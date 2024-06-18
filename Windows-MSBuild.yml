@@ -2,7 +2,7 @@ name: Build
 
 env:
   Solution: .
-  Platform: Any CPU #Win32|x64
+  Platform: #Any CPU|Win32|x64
   Configuration: Release
   Artifacts: build/$Configuration
   Branch: $env:GITHUB_REF_NAME
@@ -30,6 +30,18 @@ jobs:
         echo "CurrentDate=$(date +'%Y-%m-%d')" >> $env:GITHUB_ENV
         echo "CommitHashShort=$(git rev-parse --short=7 HEAD)" >> $env:GITHUB_ENV
         echo "CommitCount=$(git rev-list --count $env:GITHUB_REF_NAME)" >> $env:GITHUB_ENV
+
+#    - name: Install Windows 8.1 SDK
+#      shell: powershell
+#      run: |
+#        Invoke-WebRequest -Method Get -Uri https://go.microsoft.com/fwlink/p/?LinkId=323507 -OutFile sdksetup.exe -UseBasicParsing
+#        Start-Process -Wait sdksetup.exe -ArgumentList "/q", "/norestart", "/features", "OptionId.WindowsDesktopSoftwareDevelopmentKit", "OptionId.NetFxSoftwareDevelopmentKit"
+#
+#    - name: Install DirectX SDK
+#      shell: powershell
+#      run: |
+#        Invoke-WebRequest -Method Get -Uri https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -UseBasicParsing
+#        Start-Process -Wait DXSDK_Jun10.exe -ArgumentList "/U"
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
