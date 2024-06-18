@@ -2,7 +2,7 @@ name: Build
 
 env:
   Solution: .
-  Platform: Any CPU
+  Platform: Any CPU #Win32|x64
   Configuration: Release
   Artifacts: build/$Configuration
   Branch: $env:GITHUB_REF_NAME
@@ -40,9 +40,7 @@ jobs:
 
     - name: Build
       run: msbuild /m ${{env.Solution}}
-      #run: msbuild /m /p:Configuration=${{env.Configuration}} /p:Platform="Any CPU" ${{env.Solution}}
-      #run: msbuild /m /p:Configuration=${{env.Configuration}} /p:Platform="Win32" ${{env.Solution}}
-      #run: msbuild /m /p:Configuration=${{env.Configuration}} /p:Platform="x64" ${{env.Solution}}
+      #run: msbuild /m /p:Configuration="${{env.Configuration}}" /p:Platform="${{env.Platform}}" ${{env.Solution}}
 
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v2
