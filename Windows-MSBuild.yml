@@ -3,14 +3,14 @@ name: Build
 env:
   Solution: .
   Configuration: Release
-  Artifacts: build/${{env.Configuration}}
-  Branch: $env:GITHUB_REF_NAME"
+  Artifacts: build/$Configuration
+  Branch: $env:GITHUB_REF_NAME
   
 on:
   push:
-    Branches: [ ${{env.Branch}} ]
+    Branches: $Branch
   pull_request:
-    Branches: [ ${{env.Branch}} ]
+    Branches: $Branch
   workflow_dispatch:
 
 permissions:
@@ -38,7 +38,7 @@ jobs:
       run: nuget restore ${{env.Solution}}
 
     - name: Build
-      run: msbuild /m /p:Configuration=${{env.Configuration}} ${{env.Solution}}
+      run: msbuild /m /p:Configuration= ${{env.Solution}}
 
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v2
