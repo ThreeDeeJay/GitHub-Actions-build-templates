@@ -51,8 +51,7 @@ jobs:
       run: nuget restore ${{env.Solution}}
 
     - name: Build
-      run: msbuild /m ${{env.Solution}}
-      #run: msbuild /m /p:Configuration="${{env.Configuration}}" /p:Platform="${{env.Platform}}" ${{env.Solution}}
+      run: msbuild /m ${{env.Solution}} #/p:Configuration="${{env.Configuration}}" /p:Platform="${{env.Platform}}"
 
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v2
