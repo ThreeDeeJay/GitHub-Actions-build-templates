@@ -5,7 +5,7 @@ env:
   Platform: #Any CPU|Win32|x64
   Configuration: Release
   Artifacts: build/$Configuration
-  Branch: $env:GITHUB_REF_NAME
+  Branch: ${{github.ref_name}}
   
 on:
   push:
