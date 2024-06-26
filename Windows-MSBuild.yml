@@ -51,7 +51,7 @@ jobs:
       run: nuget restore ${{env.Solution}}
 
     - name: Build
-      run: msbuild /m ${{env.Solution}} #/p:Configuration="${{env.Configuration}}" /p:Platform="${{env.Platform}}" /p:IncludePath="C:\Path\to\Include" /p:LibPath="C:\Path\to\Lib" /p:AdditionalIncludePaths="C:\Path\to\external\include"
+      run: msbuild /m ${{env.Solution}} #/p:Configuration="${{env.Configuration}}" /p:Platform="${{env.Platform}}" /p:IncludePath="C:\Path\to\Include" /p:LibPath="C:\Path\to\Lib" /p:AdditionalIncludePaths="C:\Path\to\external\include" /p:AdditionalLibraryDirectories="C:\Path\to\external\lib"
 
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v2
