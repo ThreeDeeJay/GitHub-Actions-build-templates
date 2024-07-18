@@ -56,7 +56,7 @@ jobs:
       run: |
         cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
         cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
-        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${GITHUB_REPOSITORY#*/}.exe"
+        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{github.event.repository.name}}.exe"
         ls -R
 
     - name: Upload Installer Artifact to GitHub
