@@ -37,6 +37,9 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
+    - name: List files
+      run: ls -R
+
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v2
       with:
