@@ -1,11 +1,12 @@
 name: Build
 
 env:
+  Branch: ${{github.ref_name}}
   Solution: .
   Platform: #Any CPU|Win32|x64
   Configuration: Release
   Artifacts: build/$Configuration
-  Branch: ${{github.ref_name}}
+  Executable: *.exe
   
 on:
   push:
@@ -63,6 +64,10 @@ jobs:
       run: |
         msbuild /m ${{env.Solution}} #/p:Configuration="${{env.Configuration}}" /p:Platform="${{env.Platform}}"
 #        msbuild /m ${{env.Solution}} #/p:Configuration="${{env.Configuration}}" /p:Platform="${{env.Platform}}" /p:IncludePath="C:\Path\to\Include" /p:LibPath="C:\Path\to\Lib" /p:AdditionalIncludePaths="C:\Path\to\external\include" /p:AdditionalLibraryDirectories="C:\Path\to\external\lib" /p:LanguageStandard="stdcpp17"
+
+    - name: Deploy
+      run: |
+        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{env.Solution}}"
 
     - name: List files
       run: ls -R
