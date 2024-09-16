@@ -1,6 +1,7 @@
 name: Build
 
 env:
+  Branch: ${{github.ref_name}}
   Solution: .
   Platform: #Any CPU|Win32|x64
   Configuration: Release
