@@ -6,7 +6,7 @@ env:
   Platform: #Any CPU|Win32|x64
   Configuration: Release
   Artifacts: build/$Configuration
-  Executable: *.exe
+  Executable: ${{github.event.repository.name}}.exe
   
 on:
   push:
