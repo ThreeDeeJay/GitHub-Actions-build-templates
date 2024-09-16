@@ -92,3 +92,8 @@ jobs:
         prerelease: true
         title: "[${{env.CommitDate}}] ${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}"
         files: "build/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+
+#Errors:
+
+# error MSB3644: The reference assemblies for .NETFramework,Version=v4.0 were not found. To resolve this, install the Developer Pack (SDK/Targeting Pack) for this framework version or retarget your application. 
+# Use runs-on: windows-2019
