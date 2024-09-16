@@ -30,7 +30,7 @@ jobs:
       run: |
         echo "CommitDate=$(git show -s --date=format:'%Y-%m-%d' --format=%cd)" >> $env:GITHUB_ENV
         echo "CommitHashShort=$(git rev-parse --short=7 HEAD)" >> $env:GITHUB_ENV
-        echo "CommitCount=$(git rev-list --count ${{env.Branch}})" >> $env:GITHUB_ENV
+        echo "CommitCount=$(git rev-list --count ${{env.Branch}} --)" >> $env:GITHUB_ENV
 
 #    - name: Install Windows 8.1 SDK
 #      shell: powershell
