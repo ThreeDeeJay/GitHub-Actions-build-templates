@@ -2,11 +2,11 @@ name: Build
 
 env:
   Branch: ${{github.ref_name}}
-  Solution: .
+  Solution: ${{github.event.repository.name}}.sln # .
   Platform: #Any CPU|Win32|x64
   Configuration: Release
   Artifacts: build/$Configuration
-  Executable: ${{github.event.repository.name}}.exe
+  Executable: ${{github.event.repository.name}}.exe # *
   
 on:
   push:
