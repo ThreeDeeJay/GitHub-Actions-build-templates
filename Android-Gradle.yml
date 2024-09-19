@@ -1,4 +1,4 @@
-#Template from: https://github.com/ThreeDeeJay/GitHub-Actions-build-templates/blob/main/Android-Gradle
+#Template from: https://github.com/ThreeDeeJay/GitHub-Actions-build-templates/blob/main/Android-Gradle.yml
 name: Build
 
 env:
@@ -45,7 +45,7 @@ jobs:
       run: ls -R
 
     - name: Upload Artifact to GitHub
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: "${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
         path: "${{github.workspace}}/${{env.Artifacts}}/"
