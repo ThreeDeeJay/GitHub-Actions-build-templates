@@ -55,3 +55,14 @@ jobs:
         gh release create r${{env.CommitCount}} --generate-notes --latest=false --prerelease --title "[${{env.CommitDate}}] ${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}"
         gh release upload r${{env.CommitCount}} "${{env.Artifacts}}"
         gh release upload latest                "${{env.Artifacts}}" --clobber
+
+
+
+#Fix "Execution failed for task ':app:lint'." error by adding this in your app/build.gradle file
+#android {
+#    //...
+#    lintOptions {
+#        abortOnError false
+#    }
+#}
+
