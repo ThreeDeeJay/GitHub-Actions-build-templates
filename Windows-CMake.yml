@@ -5,7 +5,7 @@ env:
   Branch: ${{github.ref_name}}
   Platform: #Any CPU|Win32|x64
   Configuration: Release
-  Artifacts: build/$Configuration
+  Artifacts: build/Release
 
 
 
@@ -67,8 +67,13 @@ jobs:
       run: |
         cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
         cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
+
+    - name: Deploy
+      run: |
         windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{github.event.repository.name}}.exe"
-        ls -R
+
+    - name: List files
+      run: ls -R
 
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v4
