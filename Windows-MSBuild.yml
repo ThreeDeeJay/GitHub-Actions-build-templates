@@ -5,7 +5,7 @@ env:
   Branch: ${{github.ref_name}}
   Platform: #Any CPU|Win32|x64
   Configuration: Release
-  Artifacts: build/$Configuration
+  Artifacts: build/Release
   Solution: ${{github.event.repository.name}}.sln # .
   Executable: ${{github.event.repository.name}}.exe # *
   
