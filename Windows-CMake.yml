@@ -5,7 +5,7 @@ env:
   Branch: ${{github.ref_name}}
   Platform: #Any CPU|Win32|x64
   Configuration: Release
-  Artifacts: build/Release
+  Artifacts: build/Release/
 
 
 
@@ -68,9 +68,9 @@ jobs:
         cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
         cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
 
-    - name: Deploy
-      run: |
-        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{github.event.repository.name}}.exe"
+#    - name: Qt Deploy
+#      run: |
+#        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{github.event.repository.name}}.exe"
 
     - name: List files
       run: ls -R
@@ -79,7 +79,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: "${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
-        path: "${{github.workspace}}/${{env.Artifacts}}/"
+        path: "${{github.workspace}}/${{env.Artifacts}}"
 
     - name: Compress artifacts
       uses: vimtor/action-zip@v1.1
