@@ -82,8 +82,9 @@ jobs:
     - name: List files
       run: ls -R
 
-    - name: Deploy
-      run: windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{env.Executable}}"
+#    - name: Qt Deploy
+#      run: |
+#        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{github.event.repository.name}}.exe"
 
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v4
