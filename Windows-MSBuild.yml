@@ -8,7 +8,8 @@ env:
   Artifacts: build/Release/
   Solution: ${{github.event.repository.name}}.sln # .
   Executable: ${{github.event.repository.name}}.exe # *
-  
+#  DXSDK_DIR: C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\
+
 on:
   push:
     Branches: $Branch
