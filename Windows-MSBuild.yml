@@ -17,9 +17,6 @@ on:
     Branches: $Branch
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   Windows:
     runs-on: windows-latest
