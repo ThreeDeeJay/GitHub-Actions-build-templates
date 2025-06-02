@@ -112,3 +112,13 @@ jobs:
 
 # error MSB8020: The build tools for Visual Studio 2017 (Platform Toolset = 'v141') cannot be found. To build using the v141 build tools, please install Visual Studio 2017 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".  
 # Edit .vcproj files and after <PlatformToolset>, set v142 in all instances if using runner windows-2019 or v143 for windows-2022/latest
+
+# LINK : fatal error LNK1181: cannot open input file 'dependency32.lib' [C:\a\Project\Project.vcxproj]
+# Install the missing packages via vcpkg before the building step. Example:
+#    - name: Install vcpkg
+#      uses: lukka/run-vcpkg@v11
+#      with:
+#        vcpkgGitCommitId: 654410ee8e11f0610c11a4a49a8827a84be5e187
+#    - name: Install dependencies
+#      run: |
+#        vcpkg install dependency
