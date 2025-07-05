@@ -5,7 +5,7 @@ env:
   Branch: ${{github.ref_name}}
   GH_TOKEN: ${{ github.token }}
   Artifacts: app/build/outputs/apk/debug/app-debug.apk
-  WorkingDirectory: 
+  WorkingDirectory: #/Android
 
 on:
   push:
@@ -37,35 +37,25 @@ jobs:
         cache: gradle
 
     - name: Grant execute permission for gradlew
-      working-directory: ./${{env.WorkingDirectory}}
+      working-directory: .${{env.WorkingDirectory}}
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      working-directory: ./${{env.WorkingDirectory}}
+      working-directory: .${{env.WorkingDirectory}}
       run: ./gradlew build --warning-mode all
 
     - name: List files
-      working-directory: ./${{env.WorkingDirectory}}
+      working-directory: .${{env.WorkingDirectory}}
       run: ls -R
 
     - name: Upload Artifact to GitHub
-      working-directory: ./${{env.WorkingDirectory}}
       uses: actions/upload-artifact@v4
       with:
         name: "${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
-        path: "${{github.workspace}}/${{env.Artifacts}}/"
+        path: "${{github.workspace}}${{env.WorkingDirectory}}/${{env.Artifacts}}/"
 
     - name: Release
-      working-directory: ./${{env.WorkingDirectory}}
+      working-directory: .${{env.WorkingDirectory}}
       run: |
         gh release create r${{env.CommitCount}} --generate-notes --latest=false --prerelease --title "[${{env.CommitDate}}] ${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}"
         gh release upload r${{env.CommitCount}} "${{env.Artifacts}}"
-
-#Fix "Execution failed for task ':app:lint'." error by adding this in your app/build.gradle file
-#android {
-#    //...
-#    lintOptions {
-#        abortOnError false
-#    }
-#}
-
