@@ -2,9 +2,10 @@
 name: Build
 
 env:
-  Artifacts: app/build/outputs/apk/debug/app-debug.apk
   Branch: ${{github.ref_name}}
   GH_TOKEN: ${{ github.token }}
+  Artifacts: app/build/outputs/apk/debug/app-debug.apk
+  WorkingDirectory: 
 
 on:
   push:
@@ -17,6 +18,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./${{env.WorkingDirectory}}
 
     steps:
     - name: Clone repo and submodules
