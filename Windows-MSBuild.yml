@@ -126,3 +126,6 @@ jobs:
 
 # error MSB8036: The Windows SDK version 10.0.#####.0 was not found. Install the required version of Windows SDK or change the SDK version in the project property pages or by right-clicking the solution and selecting "Retarget solution". 
 # Add/uncomment the SDK installer step above and replace the 8.1 installer download link with #####'s from here: https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/index-legacy
+
+# Error: 403 "Resource not accessible by integration"
+# Set Workflow permissions to Read and write permissions in the repo's settings/actions
