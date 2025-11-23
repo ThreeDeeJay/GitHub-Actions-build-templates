@@ -93,3 +93,6 @@ jobs:
         prerelease: true
         title: "[${{env.CommitDate}}] ${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}"
         files: "build/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+
+# Error: 403 "Resource not accessible by integration"
+# Set Workflow permissions to Read and write permissions in the repo's settings/actions
