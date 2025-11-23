@@ -57,6 +57,7 @@ jobs:
 #        Start-Process -Wait ./DXSDK_Jun10.exe -ArgumentList "/U"
 #    - name: Set DXSDK_DIR
 #      run: echo "DXSDK_DIR=C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\" >> $env:GITHUB_ENV
+# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING THE STEPS BELOW THIS LINE
 #
 #    - name: Install Qt
 #      uses: jurplel/install-qt-action@v4
