@@ -23,7 +23,6 @@ jobs:
     runs-on: windows-latest
     steps:
 
-
     - name: Clone repo and submodules
       run: git clone --recurse-submodules https://${{github.repository_owner}}:${{github.token}}@github.com/${{github.repository}}.git "${{github.workspace}}" --branch ${{env.Branch}}
 
