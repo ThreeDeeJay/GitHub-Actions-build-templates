@@ -28,9 +28,11 @@ jobs:
 
     - name: Get current date, commit hash and count
       run: |
-        echo "CommitDate=$(git show -s --date=format:'%Y-%m-%d' --format=%cd)" >> $env:GITHUB_ENV
+        echo "FirstCommitHash=$(git rev-list --max-parents=0 HEAD)" >> $env:GITHUB_ENV
+        echo "CommitHash=$(git rev-parse)" >> $env:GITHUB_ENV
         echo "CommitHashShort=$(git rev-parse --short=7 HEAD)" >> $env:GITHUB_ENV
         echo "CommitCount=$(git rev-list --count HEAD)" >> $env:GITHUB_ENV
+        echo "CommitDate=$(git show -s --date=format:'%Y-%m-%d' --format=%cd)" >> $env:GITHUB_ENV
 
 #    - name: Install Windows 8.1 SDK
 #      shell: powershell
@@ -93,19 +95,25 @@ jobs:
         path: "${{github.workspace}}/${{env.Artifacts}}"
 
     - name: Compress artifacts
-      uses: vimtor/action-zip@v1.1
-      with:
-        files: '${{env.Artifacts}}'
-        dest: "build/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+      run: |
+        mkdir Release
+        7z a "Release/${{github.event.repository.name}}.zip" "${{github.workspace}}/${{env.Artifacts}}" -mx=9
+        cp "Release/${{github.event.repository.name}}.zip" "Release/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
-    - name: GitHub pre-release
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{secrets.GITHUB_TOKEN}}"
-        automatic_release_tag: "latest"
-        prerelease: true
-        title: "[${{env.CommitDate}}] ${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}"
-        files: "build/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+    - name: Purge tag - latest-${{env.Branch}}
+      run: |
+        gh release delete latest-${{env.Branch}} --repo ${{github.repository}} --cleanup-tag --yes || true
+
+    - name: Release - archive
+      run: |
+        gh release create archive --repo ${{github.repository}} --target ${{env.CommitHashShort}} --latest=false --prerelease --title "${{github.event.repository.name}} build archive" || true
+        gh release upload archive --repo ${{github.repository}} --clobber "Release/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+
+    - name: Release - latest-${{env.Branch}}
+      run: |
+        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --generate-notes --latest=true --prerelease --title "${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}
+        Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
+        gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{github.event.repository.name}}.zip"
 
 #Errors and solutions:
 
