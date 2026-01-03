@@ -7,6 +7,7 @@ env:
   Platform: #Any CPU|Win32|x86|x64 - Check .sln file for available ones
   Configuration: Release
   Artifacts: build/Release
+  Title: ${{github.event.repository.name}}
   Solution: ${{github.event.repository.name}}.sln # .
   Executable: ${{github.event.repository.name}}.exe # *
 #  DXSDK_DIR: C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\
@@ -96,14 +97,14 @@ jobs:
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v4
       with:
-        name: "${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
+        name: "${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
         path: "${{github.workspace}}/${{env.Artifacts}}/"
 
     - name: Compress artifacts
       run: |
         mkdir Release
-        7z a "Release/${{github.event.repository.name}}.zip" "${{github.workspace}}/${{env.Artifacts}}/" -mx=9
-        cp "Release/${{github.event.repository.name}}.zip" "Release/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+        7z a "Release/${{env.Title}}.zip" "${{github.workspace}}/${{env.Artifacts}}/" -mx=9
+        cp "Release/${{env.Title}}.zip" "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
     - name: Purge tag - latest-${{env.Branch}}
       run: |
@@ -111,15 +112,15 @@ jobs:
 
     - name: Release - archive
       run: |
-        gh release create archive --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{github.event.repository.name}} build archive" --notes "Latest build: https://github.com/${{github.repository}}/releases/latest
+        gh release create archive --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{env.Title}} build archive" --notes "Latest build: https://github.com/${{github.repository}}/releases/latest
         Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}" || true
-        gh release upload archive --repo ${{github.repository}} --clobber "Release/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+        gh release upload archive --repo ${{github.repository}} --clobber "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
     - name: Release - latest-${{env.Branch}}
       run: |
-        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --title "${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build archive: https://github.com/${{github.repository}}/releases/tag/archive
+        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --title "${{env.Title}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build archive: https://github.com/${{github.repository}}/releases/tag/archive
         Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
-        gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{github.event.repository.name}}.zip"
+        gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{env.Title}}.zip"
 
 #Errors and solutions:
 
