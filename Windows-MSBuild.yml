@@ -106,13 +106,12 @@ jobs:
 
     - name: Release - archive
       run: |
-        gh release create archive --repo ${{github.repository}} --target ${{env.CommitHashShort}} --latest=false --prerelease --title "${{github.event.repository.name}} build archive" || true
+        gh release create archive --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{github.event.repository.name}} build archive" || true
         gh release upload archive --repo ${{github.repository}} --clobber "Release/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
     - name: Release - latest-${{env.Branch}}
       run: |
-        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --generate-notes --latest=true --prerelease --title "${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}
-        Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
+        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --prerelease --title "${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
         gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{github.event.repository.name}}.zip"
 
 #Errors and solutions:
