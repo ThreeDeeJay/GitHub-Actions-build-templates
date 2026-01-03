@@ -116,7 +116,7 @@ jobs:
 
     - name: Release - latest-${{env.Branch}}
       run: |
-        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --prerelease --title "${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
+        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --title "${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
         gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{github.event.repository.name}}.zip"
 
 #Errors and solutions:
