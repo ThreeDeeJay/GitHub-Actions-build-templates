@@ -137,4 +137,4 @@ jobs:
 # Add/uncomment the SDK installer step above and replace the 8.1 installer download link with #####'s from here: https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/index-legacy
 
 # Error: 403 "Resource not accessible by integration"
-# Set Workflow permissions to Read and write permissions in the repo's settings/actions
+# Usually means it can't create a release if a new workflow is still running. Otherwise, set Workflow permissions to Read and write permissions in the repo's settings/actions
