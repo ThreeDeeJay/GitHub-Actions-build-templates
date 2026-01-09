@@ -80,7 +80,7 @@ jobs:
       run: nuget restore "${{env.Solution}}"
 
     - name: Build
-      run: msbuild /m "${{env.Solution}}" /p:Configuration="${{env.Configuration}}" #/p:Platform="${{env.Platform}}" /p:IncludePath="C:\Path\to\Include" /p:LibPath="C:\Path\to\Lib" /p:AdditionalIncludePaths="C:\Path\to\external\include" /p:AdditionalLibraryDirectories="C:\Path\to\external\lib" /p:LanguageStandard="stdcpp17"
+      run: msbuild /m "${{env.Solution}}" /p:Configuration="${{env.Configuration}}" #/p:PlatformToolset=v143 /p:Platform="${{env.Platform}}" /p:IncludePath="C:\Path\to\Include" /p:LibPath="C:\Path\to\Lib" /p:AdditionalIncludePaths="C:\Path\to\external\include" /p:AdditionalLibraryDirectories="C:\Path\to\external\lib" /p:LanguageStandard="stdcpp17"
 
 #    - name: Meson Build
 #      uses: BSFishy/meson-build@v1.0.3
@@ -128,7 +128,7 @@ jobs:
 # Uncomment the "- name: Install .NET Framework 4.6.1 Developer Pack" section and update the version and URL with X.Y (or X.Y.Z) from https://dotnet.microsoft.com/en-us/download/visual-studio-sdks?cid=msbuild-developerpacks
 
 # error MSB8020: The build tools for Visual Studio 2017 (Platform Toolset = 'v141') cannot be found. To build using the v141 build tools, please install Visual Studio 2017 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".  
-# Edit .vcproj files and after <PlatformToolset>, set v142 in all instances if using runner windows-2019 or v143 for windows-2022
+# Specify PlatformToolset in the msbuild step, e.g.: /p:PlatformToolset=v143 for windows-2022
 
 # LINK : fatal error LNK1181: cannot open input file 'dependency32.lib' [C:\a\Project\Project.vcxproj]
 # Install the missing packages via vcpkg before the building step. Example:
