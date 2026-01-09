@@ -80,7 +80,7 @@ jobs:
       run: nuget restore "${{env.Solution}}"
 
     - name: Build
-      run: msbuild /m "${{env.Solution}}" /p:Configuration="${{env.Configuration}}" #/p:PlatformToolset=v143 /p:Platform="${{env.Platform}}" /p:IncludePath="C:\Path\to\Include" /p:LibPath="C:\Path\to\Lib" /p:AdditionalIncludePaths="C:\Path\to\external\include" /p:AdditionalLibraryDirectories="C:\Path\to\external\lib" /p:LanguageStandard="stdcpp17"
+      run: msbuild /m "${{env.Solution}}" /p:Configuration="${{env.Configuration}}" /p:PlatformToolset=v143 #/p:Platform="${{env.Platform}}" /p:IncludePath="C:\Path\to\Include" /p:LibPath="C:\Path\to\Lib" /p:AdditionalIncludePaths="C:\Path\to\external\include" /p:AdditionalLibraryDirectories="C:\Path\to\external\lib" /p:LanguageStandard="stdcpp17"
 
 #    - name: Meson Build
 #      uses: BSFishy/meson-build@v1.0.3
