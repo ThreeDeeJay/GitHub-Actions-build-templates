@@ -61,8 +61,13 @@ jobs:
 #        Start-Process -Wait ./DXSDK_Jun10.exe -ArgumentList "/U"
 #    - name: Set DXSDK_DIR
 #      run: echo "DXSDK_DIR=C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\" >> $env:GITHUB_ENV
-# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING THE STEPS BELOW THIS LINE
-#
+# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
+
+#    - name: Install TortoiseSVN
+#      run: |
+#        curl -L https://cfhcable.dl.sourceforge.net/project/tortoisesvn/1.14.9/Application/TortoiseSVN-1.14.9.29743-x64-svn-1.14.5.msi?viasf=1 -o "TortoiseSVN.msi"
+#        Start-Process -Wait "msiexec" -ArgumentList "/package", "TortoiseSVN.msi", "/quiet"
+
 #    - name: Install Qt
 #      uses: jurplel/install-qt-action@v4
 #      with:
@@ -80,7 +85,7 @@ jobs:
 #        python --version
 #        $Env:Path = "C:\Python26;" + $Env:Path
 #        python --version
-#  ADD THE LAST 3 LINES ABOVE RIGHT BEFORE MSBUILD IN THE BUILD STEP COMMAND TO SWITCH AND CHECK PYTHON VERSION
+# NOTE: ADD THE LAST 3 LINES ABOVE RIGHT BEFORE MSBUILD IN THE BUILD STEP TO SWITCH AND CHECK PYTHON VERSION
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
