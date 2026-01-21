@@ -4,12 +4,12 @@ name: Build
 env:
   GH_TOKEN: ${{github.token}}
   Branch: ${{github.ref_name}}
-  Platform: #Any CPU|Win32|x64
+  Platform: #Any CPU|Win32|x86|x64 - Check .sln file for available ones
   Configuration: Release
-  Artifacts: build/Release/
-
-
-
+  Artifacts: build/Release
+  Title: ${{github.event.repository.name}}
+  Executable: ${{github.event.repository.name}}.exe # *
+#  DXSDK_DIR: C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
 
 jobs:
   Windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
 
     - name: Clone repo and submodules
@@ -28,15 +28,23 @@ jobs:
 
     - name: Get current date, commit hash and count
       run: |
-        echo "CommitDate=$(git show -s --date=format:'%Y-%m-%d' --format=%cd)" >> $env:GITHUB_ENV
+        echo "FirstCommitHash=$(git rev-list --max-parents=0 HEAD)" >> $env:GITHUB_ENV
+        echo "CommitHash=$(git rev-parse HEAD)" >> $env:GITHUB_ENV
         echo "CommitHashShort=$(git rev-parse --short=7 HEAD)" >> $env:GITHUB_ENV
         echo "CommitCount=$(git rev-list --count HEAD)" >> $env:GITHUB_ENV
+        echo "CommitDate=$(git show -s --date=format:'%Y-%m-%d' --format=%cd)" >> $env:GITHUB_ENV
 
 #    - name: Install Windows 8.1 SDK
 #      shell: powershell
 #      run: |
 #        Invoke-WebRequest -Method Get -Uri https://go.microsoft.com/fwlink/p/?LinkId=323507 -OutFile sdksetup.exe -UseBasicParsing
 #        Start-Process -Wait sdksetup.exe -ArgumentList "/q", "/norestart", "/features", "OptionId.WindowsDesktopSoftwareDevelopmentKit", "OptionId.NetFxSoftwareDevelopmentKit"
+#
+#    - name: Install .NET Framework 4.6.1 Developer Pack
+#      shell: powershell
+#      run: |
+#        Invoke-WebRequest -Method Get -Uri https://go.microsoft.com/fwlink/?linkid=2099470 -OutFile ndp461-devpack-kb3105179-enu.exe -UseBasicParsing
+#        Start-Process -Wait ./ndp461-devpack-kb3105179-enu.exe -ArgumentList "/Quiet"
 #
 #    - name: Cache DirectX SDK
 #      id: DXSDK_Jun10
@@ -52,8 +60,13 @@ jobs:
 #        Start-Process -Wait ./DXSDK_Jun10.exe -ArgumentList "/U"
 #    - name: Set DXSDK_DIR
 #      run: echo "DXSDK_DIR=C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\" >> $env:GITHUB_ENV
-# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING THE STEPS BELOW THIS LINE
-#
+# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
+
+#    - name: Install TortoiseSVN
+#      run: |
+#        curl -L https://cfhcable.dl.sourceforge.net/project/tortoisesvn/1.14.9/Application/TortoiseSVN-1.14.9.29743-x64-svn-1.14.5.msi?viasf=1 -o "TortoiseSVN.msi"
+#        Start-Process -Wait "msiexec" -ArgumentList "/package", "TortoiseSVN.msi", "/quiet"
+
 #    - name: Install Qt
 #      uses: jurplel/install-qt-action@v4
 #      with:
@@ -63,38 +76,60 @@ jobs:
 #        arch: 'win64_msvc2019_64'
 #        modules: 'addons.qtmultimedia'
 
+#    - name: Install Python 2.6
+#      shell: powershell
+#      run: |
+#        Invoke-WebRequest -Method Get -Uri https://www.python.org/ftp/python/2.6.6/python-2.6.6.msi -OutFile python.msi -UseBasicParsing
+#        Start-Process -Wait ./python.msi -ArgumentList "/quiet", "InstallAllUsers=1", "PrependPath=1"
+#        python --version
+#        $Env:Path = "C:\Python26;" + $Env:Path
+#        python --version
+# NOTE: ADD THE LAST 3 LINES ABOVE RIGHT BEFORE MSBUILD IN THE BUILD STEP TO SWITCH AND CHECK PYTHON VERSION
+
     - name: Build
       run: |
         cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
         cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
 
-#    - name: Qt Deploy
-#      run: |
-#        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{github.event.repository.name}}.exe"
-
     - name: List files
       run: ls -R
+
+#    - name: Qt Deploy
+#      run: |
+#        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{env.Executable}}"
 
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v4
       with:
-        name: "${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
-        path: "${{github.workspace}}/${{env.Artifacts}}"
+        name: "${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
+        path: "${{github.workspace}}/${{env.Artifacts}}/"
 
     - name: Compress artifacts
-      uses: vimtor/action-zip@v1.1
-      with:
-        files: '${{env.Artifacts}}/'
-        dest: "build/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+      run: |
+        mkdir Release
+        7z a "Release/${{env.Title}}.zip" "${{github.workspace}}/${{env.Artifacts}}/" -mx=9
+        cp "Release/${{env.Title}}.zip" "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
-    - name: GitHub pre-release
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{secrets.GITHUB_TOKEN}}"
-        automatic_release_tag: "latest"
-        prerelease: true
-        title: "[${{env.CommitDate}}] ${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}"
-        files: "build/${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+    - name: Purge tag - latest-${{env.Branch}}
+      run: |
+        gh release delete latest-${{env.Branch}} --repo ${{github.repository}} --cleanup-tag --yes || true
+
+    - name: Release - archive
+      run: |
+        gh release create archive --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{env.Title}} build archive" --notes "Latest build: https://github.com/${{github.repository}}/releases/latest
+        Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}" || true
+        gh release upload archive --repo ${{github.repository}} --clobber "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+
+    - name: Release - latest-${{env.Branch}}
+      run: |
+        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --title "${{env.Title}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build archive: https://github.com/${{github.repository}}/releases/tag/archive
+        Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
+        gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{env.Title}}.zip"
+
+#Errors and solutions:
+
+# error MSB8036: The Windows SDK version 10.0.#####.0 was not found. Install the required version of Windows SDK or change the SDK version in the project property pages or by right-clicking the solution and selecting "Retarget solution". 
+# Add/uncomment the SDK installer step above and replace the 8.1 installer download link with #####'s from here: https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/index-legacy
 
 # Error: 403 "Resource not accessible by integration"
-# Set Workflow permissions to Read and write permissions in the repo's settings/actions
+# Usually means it can't create a release if a new workflow is still running. Otherwise, set Workflow permissions to Read and write permissions in the repo's settings/actions
