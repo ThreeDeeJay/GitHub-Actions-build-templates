@@ -86,10 +86,11 @@ jobs:
 #        python --version
 # NOTE: ADD THE LAST 3 LINES ABOVE RIGHT BEFORE MSBUILD IN THE BUILD STEP TO SWITCH AND CHECK PYTHON VERSION
 
+    - name: Configure
+      run: cmake -A ${{env.Platform}} -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
+
     - name: Build
-      run: |
-        cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
-        cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
+      run: cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
 
     - name: List files
       run: ls -R
