@@ -39,13 +39,13 @@ jobs:
 #      run: |
 #        Invoke-WebRequest -Method Get -Uri https://go.microsoft.com/fwlink/p/?LinkId=323507 -OutFile sdksetup.exe -UseBasicParsing
 #        Start-Process -Wait sdksetup.exe -ArgumentList "/q", "/norestart", "/features", "OptionId.WindowsDesktopSoftwareDevelopmentKit", "OptionId.NetFxSoftwareDevelopmentKit"
-#
+
 #    - name: Install .NET Framework 4.6.1 Developer Pack
 #      shell: powershell
 #      run: |
 #        Invoke-WebRequest -Method Get -Uri https://go.microsoft.com/fwlink/?linkid=2099470 -OutFile ndp461-devpack-kb3105179-enu.exe -UseBasicParsing
 #        Start-Process -Wait ./ndp461-devpack-kb3105179-enu.exe -ArgumentList "/Quiet"
-#
+
 #    - name: Cache DirectX SDK
 #      id: DXSDK_Jun10
 #      uses: actions/cache@v4
@@ -85,6 +85,14 @@ jobs:
 #        $Env:Path = "C:\Python26;" + $Env:Path
 #        python --version
 # NOTE: ADD THE LAST 3 LINES ABOVE RIGHT BEFORE MSBUILD IN THE BUILD STEP TO SWITCH AND CHECK PYTHON VERSION
+
+#    - name: Install vcpkg
+#      uses: lukka/run-vcpkg@v11.5
+#      with:
+#        vcpkgGitCommitId: c2aeddd80357b17592e59ad965d2adf65a19b22f
+#    - name: Install dependencies
+#      run: |
+#        vcpkg install
 
     - name: Configure
       run: cmake -A "${{env.Platform}}" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
