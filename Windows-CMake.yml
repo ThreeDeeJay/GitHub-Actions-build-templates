@@ -74,6 +74,7 @@ jobs:
 #      run: |
 #        Invoke-WebRequest -Method Get -Uri https://sdk.lunarg.com/sdk/download/1.4.335.0/windows/vulkansdk-windows-X64-1.4.335.0.exe -OutFile VulkanSDK.exe -UseBasicParsing
 #        Start-Process -Wait ./VulkanSDK.exe -ArgumentList "--accept-licenses", " --default-answer", " --confirm-command install"
+# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
 #    - name: Install TortoiseSVN
 #      run: |
