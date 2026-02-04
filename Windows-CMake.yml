@@ -95,7 +95,7 @@ jobs:
 #        vcpkg install
 
     - name: Configure
-      run: cmake -A "${{env.Platform}}" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
+      run: cmake -A "${{env.Platform}}" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}} #-DCMAKE_PREFIX_PATH=vcpkg\installed\x64-windows
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
