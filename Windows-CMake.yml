@@ -4,7 +4,7 @@ name: Build
 env:
   GH_TOKEN: ${{github.token}}
   Branch: ${{github.ref_name}}
-  Platform: #Any CPU|Win32|x86|x64 - Check .sln file for available ones
+  Platform: Any CPU #Win32|x86|x64 - Check .sln file for available ones
   Configuration: Release
   Artifacts: build/Release
   Title: ${{github.event.repository.name}}
@@ -87,7 +87,7 @@ jobs:
 # NOTE: ADD THE LAST 3 LINES ABOVE RIGHT BEFORE MSBUILD IN THE BUILD STEP TO SWITCH AND CHECK PYTHON VERSION
 
     - name: Configure
-      run: cmake -A ${{env.Platform}} -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
+      run: cmake -A "${{env.Platform}}" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
