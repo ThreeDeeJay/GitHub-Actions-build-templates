@@ -66,7 +66,7 @@ jobs:
 #      id: cache-vulkan-sdk
 #      uses: actions/cache@v5
 #      with:
-#        path: "C:\\VulkanSDK\\1.4.335"
+#        path: "C:\\VulkanSDK\\1.4.335.0"
 #        key: VulkanSDK
 #    - name: Install Vulkan SDK
 #      if: steps.cache-vulkan-sdk.outputs.cache-hit != 'true'
