@@ -132,7 +132,7 @@ jobs:
     - name: Compress artifacts
       run: |
         mkdir Release
-        7z a "Release/${{env.Title}}.zip" "${{github.workspace}}/${{env.Artifacts}}/" -mx=9
+        7z a "Release/${{env.Title}}.zip" "${{github.workspace}}/${{env.Artifacts}}/*" -mx=9
         cp "Release/${{env.Title}}.zip" "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
     - name: Purge tag - latest-${{env.Branch}}
