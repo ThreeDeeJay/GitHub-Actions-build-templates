@@ -10,6 +10,7 @@ env:
   Title: ${{github.event.repository.name}}
   Executable: ${{github.event.repository.name}}.exe # *
 #  DXSDK_DIR: C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\
+#  VULKAN_VERSION: 1.1.130.0
 
 on:
   push:
@@ -66,14 +67,15 @@ jobs:
 #      id: cache-vulkan-sdk
 #      uses: actions/cache@v5
 #      with:
-#        path: "C:\\VulkanSDK\\1.4.335.0"
+#        path: "C:\\VulkanSDK\\${{env.VULKAN_VERSION}}"
 #        key: VulkanSDK
 #    - name: Install Vulkan SDK
 #      if: steps.cache-vulkan-sdk.outputs.cache-hit != 'true'
 #      shell: powershell
 #      run: |
-#        Invoke-WebRequest -Method Get -Uri https://sdk.lunarg.com/sdk/download/1.4.335.0/windows/vulkansdk-windows-X64-1.4.335.0.exe -OutFile VulkanSDK.exe -UseBasicParsing
-#        Start-Process -Wait ./VulkanSDK.exe -ArgumentList "--accept-licenses", " --default-answer", " --confirm-command install"
+#        echo "VULKAN_SDK=C:\VulkanSDK\${{env.VULKAN_VERSION}}" >> $env:GITHUB_ENV
+#        Invoke-WebRequest -Method Get -Uri https://web.archive.org/web/20200413110014if_/https://sdk.lunarg.com/sdk/download/${{env.VULKAN_VERSION}}/windows/VulkanSDK-${{env.VULKAN_VERSION}}-Installer.exe -OutFile VulkanSDK.exe -UseBasicParsing
+#        Start-Process -Wait ./VulkanSDK.exe -ArgumentList "/S", "--accept-licenses", "--default-answer", "--confirm-command install", "com.lunarg.vulkan.sdl2", "com.lunarg.vulkan.glm"
 # NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
 #    - name: Install TortoiseSVN
