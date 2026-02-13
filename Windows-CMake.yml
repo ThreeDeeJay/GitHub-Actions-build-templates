@@ -126,8 +126,10 @@ jobs:
 #      - name: Deploy - vcpkg
 #        shell: cmd
 #        run: |
-#          If exist "vcpkg_installed\${{env.Platform}}-windows\bin\*.dll" (copy "vcpkg_installed\${{env.Platform}}-windows\bin\*.dll" "${{env.Artifacts}}")
 #          If exist "vcpkg\installed\${{env.Platform}}-windows\bin\*.dll" (copy "vcpkg\installed\${{env.Platform}}-windows\bin\*.dll" "${{env.Artifacts}}")
+#          If exist "vcpkg_installed\${{env.Platform}}-windows\bin\*.dll" (copy "vcpkg_installed\${{env.Platform}}-windows\bin\*.dll" "${{env.Artifacts}}")
+#          If exist "vcpkg\installed\${{env.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg\installed\${{env.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
+#          If exist "vcpkg_installed\${{env.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg_installed\${{env.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
 
     - name: Upload Installer Artifact to GitHub
       uses: actions/upload-artifact@v4
