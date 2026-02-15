@@ -1,4 +1,4 @@
-#Template from: https://github.com/ThreeDeeJay/GitHub-Actions-build-templates/blob/main/Android-Gradle.yml
+#Based on template from: https://github.com/ThreeDeeJay/GitHub-Actions-build-templates/blob/main/Android-Gradle.yml
 name: Build
 
 env:
