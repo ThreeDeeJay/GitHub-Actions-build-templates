@@ -2,8 +2,8 @@
 name: Build
 
 env:
-  Branch: ${{github.ref_name}}
   GH_TOKEN: ${{ github.token }}
+  Branch: ${{github.ref_name}}
   Artifacts: app/build/outputs/apk/debug/app-debug.apk
   WorkingDirectory: #/Android
 
