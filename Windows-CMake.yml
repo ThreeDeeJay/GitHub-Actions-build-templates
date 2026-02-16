@@ -131,7 +131,7 @@ jobs:
 #        If exist "vcpkg\installed\${{env.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg\installed\${{env.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
 #        If exist "vcpkg_installed\${{env.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg_installed\${{env.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
 
-    - name: Upload Installer Artifact to GitHub
+    - name: Upload artifacts to GitHub
       uses: actions/upload-artifact@v4
       with:
         name: "${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
