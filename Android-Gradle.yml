@@ -25,9 +25,11 @@ jobs:
 
     - name: Get current date, commit hash and count
       run: |
-        echo "CommitDate=$(git show -s --date=format:'%Y-%m-%d' --format=%cd)" >> $GITHUB_ENV
-        echo "CommitHashShort=$(git rev-parse --short=7 HEAD)" >> $GITHUB_ENV
-        echo "CommitCount=$(git rev-list --count ${{env.Branch}} --)" >> $GITHUB_ENV
+        echo "FirstCommitHash=$(git rev-list --max-parents=0 HEAD --first-parent)" >> $env:GITHUB_ENV
+        echo "CommitHash=$(git rev-parse HEAD)" >> $env:GITHUB_ENV
+        echo "CommitHashShort=$(git rev-parse --short=7 HEAD)" >> $env:GITHUB_ENV
+        echo "CommitCount=$(git rev-list --count HEAD)" >> $env:GITHUB_ENV
+        echo "CommitDate=$(git show -s --date=format:'%Y-%m-%d' --format=%cd)" >> $env:GITHUB_ENV
     
     - name: set up JDK 17
       uses: actions/setup-java@v3
@@ -48,14 +50,24 @@ jobs:
       working-directory: .${{env.WorkingDirectory}}
       run: ls -R
 
-    - name: Upload Artifact to GitHub
-      uses: actions/upload-artifact@v4
-      with:
-        name: "${{github.event.repository.name}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
-        path: "${{github.workspace}}${{env.WorkingDirectory}}/${{env.Artifacts}}/"
-
-    - name: Release
-      working-directory: .${{env.WorkingDirectory}}
+    - name: Compress artifacts
       run: |
-        gh release create r${{env.CommitCount}} --generate-notes --latest=false --prerelease --title "[${{env.CommitDate}}] ${{github.event.repository.name}} r${{env.CommitCount}}@${{env.CommitHashShort}}"
-        gh release upload r${{env.CommitCount}} "${{env.Artifacts}}"
+        mkdir Release
+        7z a "Release/${{env.Title}}.zip" "${{github.workspace}}/${{env.Artifacts}}/*" -mx=9
+        cp "Release/${{env.Title}}.zip" "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+
+    - name: Purge tag - latest-${{env.Branch}}
+      run: |
+        gh release delete latest-${{env.Branch}} --repo ${{github.repository}} --cleanup-tag --yes || true
+
+    - name: Release - archive-${{env.Branch}}
+      run: |
+        gh release create archive-${{env.Branch}} --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{env.Title}} build archive" --notes "Latest build: https://github.com/${{github.repository}}/releases/latest
+        Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}" || true
+        gh release upload archive-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+
+    - name: Release - latest-${{env.Branch}}
+      run: |
+        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --title "${{env.Title}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build archive: https://github.com/${{github.repository}}/releases/tag/archive
+        Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
+        gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{env.Title}}.zip"
