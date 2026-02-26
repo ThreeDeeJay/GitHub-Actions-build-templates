@@ -113,10 +113,6 @@ jobs:
     - name: Build
       run: msbuild /m "${{env.Solution}}" /p:Configuration="${{env.Configuration}}" /p:PlatformToolset=v143 #/p:Platform="${{env.Platform}}" /p:IncludePath="C:\Path\to\Include" /p:LibPath="C:\Path\to\Lib" /p:AdditionalIncludePaths="C:\Path\to\external\include" /p:AdditionalLibraryDirectories="C:\Path\to\external\lib" /p:AdditionalDependencies=file.lib /p:LanguageStandard="stdcpp17"
 
-#    - name: .NET Restore
-#      run: dotnet restore "${{env.Solution}}"
-#    - name: .NET Build
-#      run: dotnet build "${{env.Solution}}" -c "${{env.Configuration}}"
 #    - name: .NET Publish
 #      run: dotnet publish "${{github.event.repository.name}}.App/${{github.event.repository.name}}.App.csproj" -c "${{env.Configuration}}"
 
