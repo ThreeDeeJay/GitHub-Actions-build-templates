@@ -78,6 +78,20 @@ jobs:
 #        Start-Process -Wait ./VulkanSDK.exe -ArgumentList "/S", "--accept-licenses", "--default-answer", "--confirm-command install", "com.lunarg.vulkan.sdl2", "com.lunarg.vulkan.glm"
 # NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
+#    - name: Cache CUDA
+#      id: cache-cuda
+#      uses: actions/cache@v5
+#      with:
+#        path: "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.1"
+#        key: CUDA
+#    - name: Install CUDA
+#      if: steps.cache-cuda.outputs.cache-hit != 'true'
+#      shell: powershell
+#      run: |
+#        Invoke-WebRequest -Method Get -Uri https://developer.download.nvidia.com/compute/cuda/13.1.1/local_installers/cuda_13.1.1_windows.exe -OutFile CUDA.exe -UseBasicParsing
+#        Start-Process -Wait -NoNewWindow ./CUDA.exe -ArgumentList "-s"
+# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
+
 #    - name: Install TortoiseSVN
 #      run: |
 #        curl -L https://cfhcable.dl.sourceforge.net/project/tortoisesvn/1.14.9/Application/TortoiseSVN-1.14.9.29743-x64-svn-1.14.5.msi?viasf=1 -o "TortoiseSVN.msi"
