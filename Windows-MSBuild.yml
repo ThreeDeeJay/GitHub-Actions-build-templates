@@ -156,7 +156,7 @@ jobs:
       run: >
         msbuild
         /m "${{env.Solution}}"
-        /p:Configuration="${{matrix.Settings.Configuration}}"
+        /p:Configuration="${{matrix.Configuration}}"
         /p:PlatformToolset=v143
 #/p:Platform="${{env.Platform}}"
 #/p:IncludePath="C:\Path\to\Include"
