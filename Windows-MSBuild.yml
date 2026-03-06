@@ -48,7 +48,7 @@ jobs:
         "${{github.workspace}}"
         --branch ${{env.Branch}}
         --recurse-submodules
-#--depth 1 - Fetches entire commit history but breaks commit count
+#--depth 1 - Fetches single commit which is faster but breaks commit count
 
     - name: Get current date, commit hash and count
       run: |
