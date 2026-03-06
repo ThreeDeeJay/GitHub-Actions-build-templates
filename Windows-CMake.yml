@@ -41,7 +41,13 @@ jobs:
     steps:
 
     - name: Clone repo and submodules
-      run: git clone https://${{github.repository_owner}}:${{github.token}}@github.com/${{github.repository}}.git "${{github.workspace}}" --branch ${{env.Branch}} --recurse-submodules #--depth 1 - Fetches entire commit history but breaks commit count
+      run: >
+        git
+        clone https://${{github.repository_owner}}:${{github.token}}@github.com/${{github.repository}}.git
+        "${{github.workspace}}"
+        --branch ${{env.Branch}}
+        --recurse-submodules
+#--depth 1 - Fetches entire commit history but breaks commit count
 
     - name: Get current date, commit hash and count
       run: |
@@ -143,9 +149,9 @@ jobs:
     - name: Configure
       run: >
         cmake
-        -A "${{env.Platform}}"
-        -B ${{github.workspace}}/build
-        -DCMAKE_BUILD_TYPE=${{env.Configuration}}
+        -A "${{matrix.Settings.Platform}}"
+        -B "${{github.workspace}}/build"
+        -DCMAKE_BUILD_TYPE="${{matrix.Settings.Configuration}}"
 
     - name: Configure
       run: >
@@ -158,8 +164,8 @@ jobs:
     - name: Build
       run: >
         cmake
-        --build ${{github.workspace}}/build
-        --config ${{env.Configuration}}
+        --build "${{github.workspace}}/build"
+        --config "${{matrix.Settings.Configuration}}"
 
     - name: List files
       run: ls -R
