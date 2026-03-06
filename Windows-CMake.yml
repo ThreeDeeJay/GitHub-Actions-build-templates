@@ -20,8 +20,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  Windows:
+  Build:
+    name: ${{matrix.Settings.Name}}-${{matrix.Configuration}}
     runs-on: windows-2022
+    strategy:
+      matrix:
+        Configuration: [Release] #[Release, Debug]
+        Settings:
+#        - {
+#            Name: "Win32",
+#            Platform: "Win32",
+#            Architecture: "x86"
+#          }
+        - {
+            Name: "Win64",
+            Platform: "x64",
+            Architecture: "x64"
+          }
+          
     steps:
 
     - name: Clone repo and submodules
@@ -125,10 +141,21 @@ jobs:
 #        vcpkg install
 
     - name: Configure
-      run: cmake -A "${{env.Platform}}" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}} #-DCMAKE_PREFIX_PATH=vcpkg\installed\x64-windows
+      run: cmake -A "${{env.Platform}}" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.Configuration}}
+
+    - name: Configure
+      run: >
+        cmake
+        -A "${{matrix.Settings.Platform}}"
+        -B "${{github.workspace}}/build"
+        -DCMAKE_BUILD_TYPE=${{matrix.Configuration}}
+#-DCMAKE_PREFIX_PATH=vcpkg\installed\x64-windows
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.Configuration}}
+      run: >
+        cmake
+        --build ${{github.workspace}}/build
+        --config ${{env.Configuration}}
 
     - name: List files
       run: ls -R
@@ -143,39 +170,75 @@ jobs:
 #        If exist "vcpkg_installed\${{env.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg_installed\${{env.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
 #        xcopy "assets\" "${{env.Artifacts}}\assets\" /s
 
-    - name: Upload artifacts to GitHub
+    - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: "${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}"
+        name: ${{env.Title}}-${{matrix.Settings.Name}}-${{matrix.Configuration}}
+        path: |
         path: "${{github.workspace}}/${{env.Artifacts}}/"
 
-    - name: Compress artifacts
-      if: github.event_name == 'push'
-      run: |
-        mkdir Release
-        7z a "Release/${{env.Title}}.zip" "${{github.workspace}}/${{env.Artifacts}}/*" -mx=9
-        cp "Release/${{env.Title}}.zip" "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
 
-    - name: Purge tag - latest-${{env.Branch}}
-      if: github.event_name == 'push'
-      run: |
-        gh release delete latest-${{env.Branch}} --repo ${{github.repository}} --cleanup-tag --yes || true
+  Release:
+    name: Release
+    runs-on: windows-latest
+    needs: Build
+    steps:
 
-    - name: Release - archive-${{env.Branch}}
-      if: github.event_name == 'push'
-      run: |
-        gh release create archive-${{env.Branch}} --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{env.Title}} ${{env.Branch}} build archive" --notes "Latest build: https://github.com/${{github.repository}}/releases/latest-${{env.Branch}}
-        Build logs: https://github.com/${{github.repository}}/actions" || true
-        gh release edit archive-${{env.Branch}} --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{env.Title}} ${{env.Branch}} build archive" --notes "Latest build: https://github.com/${{github.repository}}/releases/latest-${{env.Branch}}
-        Build logs: https://github.com/${{github.repository}}/actions" || true
-        gh release upload archive-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+      - name: Clone repo and submodules
+        run: git clone https://${{github.repository_owner}}:${{github.token}}@github.com/${{github.repository}}.git "${{github.workspace}}" --branch ${{env.Branch}} --recurse-submodules
 
-    - name: Release - latest-${{env.Branch}}
-      if: github.event_name == 'push'
-      run: |
-        gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --title "${{env.Title}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build archive: https://github.com/${{github.repository}}/releases/tag/archive-${{env.Branch}}
-        Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
-        gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{env.Title}}.zip"
+      - name: Get current date, commit hash and count
+        run: |
+          echo "FirstCommitHash=$(git rev-list --max-parents=0 HEAD --first-parent)" >> $env:GITHUB_ENV
+          echo "CommitHash=$(git rev-parse HEAD)" >> $env:GITHUB_ENV
+          echo "CommitHashShort=$(git rev-parse --short=7 HEAD)" >> $env:GITHUB_ENV
+          echo "CommitCount=$(git rev-list --count HEAD)" >> $env:GITHUB_ENV
+          echo "CommitDate=$(git show -s --date=format:'%Y-%m-%d' --format=%cd)" >> $env:GITHUB_ENV
+
+#      - name: Download Artifacts - Win32
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: ${{env.Title}}-Win32-Release
+#          path: Artifacts/Win32/
+
+      - name: Download Artifacts - Win64
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{env.Title}}-Win64-Release
+          path: Artifacts/Win64/
+
+      - name: Deploy
+        run: |
+          mkdir "Release"
+          cp "LICENSE" "Release/License.txt"
+          cp "README.md" "Release/ReadMe.txt"
+  
+      - name: Compress artifacts
+        if: github.event_name == 'push'
+        run: |
+          7z a "Release/${{env.Title}}.zip" "${{github.workspace}}/${{env.Artifacts}}/*" -mx=9
+          cp "Release/${{env.Title}}.zip" "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+  
+      - name: Purge tag - latest-${{env.Branch}}
+        if: github.event_name == 'push'
+        run: |
+          gh release delete latest-${{env.Branch}} --repo ${{github.repository}} --cleanup-tag --yes || true
+  
+      - name: Release - archive-${{env.Branch}}
+        if: github.event_name == 'push'
+        run: |
+          gh release create archive-${{env.Branch}} --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{env.Title}} ${{env.Branch}} build archive" --notes "Latest build: https://github.com/${{github.repository}}/releases/latest-${{env.Branch}}
+          Build logs: https://github.com/${{github.repository}}/actions" || true
+          gh release edit archive-${{env.Branch}} --repo ${{github.repository}} --target ${{env.FirstCommitHash}} --latest=false --prerelease --title "${{env.Title}} ${{env.Branch}} build archive" --notes "Latest build: https://github.com/${{github.repository}}/releases/latest-${{env.Branch}}
+          Build logs: https://github.com/${{github.repository}}/actions" || true
+          gh release upload archive-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{env.Title}}_r${{env.CommitCount}}@${{env.CommitHashShort}}.zip"
+  
+      - name: Release - latest-${{env.Branch}}
+        if: github.event_name == 'push'
+        run: |
+          gh release create latest-${{env.Branch}} --repo ${{github.repository}} --target ${{env.CommitHash}} --generate-notes --latest=true --title "${{env.Title}} r${{env.CommitCount}}@${{env.CommitHashShort}}" --notes "Build archive: https://github.com/${{github.repository}}/releases/tag/archive-${{env.Branch}}
+          Build log: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"
+          gh release upload latest-${{env.Branch}} --repo ${{github.repository}} --clobber "Release/${{env.Title}}.zip"
 
 #Errors and solutions:
 
