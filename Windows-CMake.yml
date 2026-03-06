@@ -4,7 +4,6 @@ name: Build
 env:
   GH_TOKEN: ${{github.token}}
   Branch: ${{github.ref_name}}
-  Platform: Any CPU #Win32|x86|x64 - Check .sln file for available ones
   Artifacts: build/Release
   Title: ${{github.event.repository.name}}
   Executable: ${{github.event.repository.name}}.exe # *
