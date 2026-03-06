@@ -141,10 +141,10 @@ jobs:
 #      run: |
 #        vcpkg install
 
-    - name: Add MSBuild to PATH
+    - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Restore NuGet packages
+    - name: Restore
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore "${{env.Solution}}"
 
@@ -162,11 +162,11 @@ jobs:
 #/p:AdditionalDependencies=file.lib
 #/p:LanguageStandard="stdcpp17"
 
-    - name: .NET Publish
-      run: > 
-        dotnet
-        publish "${{github.event.repository.name}}.App/${{github.event.repository.name}}.App.csproj"
-        -c "${{env.Configuration}}"
+#    - name: Publish
+#      run: > 
+#        dotnet
+#        publish "${{github.event.repository.name}}.App/${{github.event.repository.name}}.App.csproj"
+#        -c "${{env.Configuration}}"
 
 #    - name: Meson Build
 #      uses: BSFishy/meson-build@v1.0.3
