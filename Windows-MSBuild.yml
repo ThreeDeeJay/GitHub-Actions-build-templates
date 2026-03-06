@@ -159,7 +159,7 @@ jobs:
         msbuild
         /m "${{env.Solution}}"
         /p:Configuration="${{matrix.Configuration}}"
-#/p:Platform="${{env.Platform}}"
+#/p:Platform="${{matrix.Settings.Platform}}"
 #/p:PlatformToolset=v143
 #/p:IncludePath="C:\Path\to\Include"
 #/p:LibPath="C:\Path\to\Lib"
