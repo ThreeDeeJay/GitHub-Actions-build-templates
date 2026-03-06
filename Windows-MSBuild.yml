@@ -29,12 +29,14 @@ jobs:
 #        - {
 #            Name: "Win32",
 #            Platform: "Win32",
-#            Architecture: "x86"
+#            Architecture: "x86",
+#            Triplet: "x86-windows"
 #          }
         - {
             Name: "Win64",
             Platform: "x64",
-            Architecture: "x64"
+            Architecture: "x64",
+            Triplet: "x64-windows"
           }
           
     steps:
