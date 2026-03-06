@@ -42,7 +42,13 @@ jobs:
     steps:
 
     - name: Clone repo and submodules
-      run: git clone https://${{github.repository_owner}}:${{github.token}}@github.com/${{github.repository}}.git "${{github.workspace}}" --branch ${{env.Branch}} --recurse-submodules #--depth 1 - Fetches entire commit history but breaks commit count
+      run: >
+        git
+        clone https://${{github.repository_owner}}:${{github.token}}@github.com/${{github.repository}}.git
+        "${{github.workspace}}"
+        --branch ${{env.Branch}}
+        --recurse-submodules
+#--depth 1 - Fetches entire commit history but breaks commit count
 
     - name: Get current date, commit hash and count
       run: |
@@ -152,7 +158,7 @@ jobs:
       run: >
         msbuild
         /m "${{env.Solution}}"
-        /p:Configuration="${{env.Configuration}}"
+        /p:Configuration="${{matrix.Settings.Configuration}}"
         /p:PlatformToolset=v143
 #/p:Platform="${{env.Platform}}"
 #/p:IncludePath="C:\Path\to\Include"
