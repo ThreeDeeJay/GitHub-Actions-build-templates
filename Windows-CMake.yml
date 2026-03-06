@@ -28,12 +28,14 @@ jobs:
 #        - {
 #            Name: "Win32",
 #            Platform: "Win32",
-#            Architecture: "x86"
+#            Architecture: "x86",
+#            Triplet: "x86-windows"
 #          }
         - {
             Name: "Win64",
             Platform: "x64",
-            Architecture: "x64"
+            Architecture: "x64",
+            Triplet: "x64-windows"
           }
           
     steps:
@@ -157,7 +159,7 @@ jobs:
         -A "${{matrix.Settings.Platform}}"
         -B "${{github.workspace}}/build"
         -DCMAKE_BUILD_TYPE=${{matrix.Configuration}}
-#-DCMAKE_PREFIX_PATH=vcpkg\installed\x64-windows
+#-DCMAKE_PREFIX_PATH=vcpkg\installed\${{matrix.Settings.Triplet}}
 
     - name: Build
       run: >
