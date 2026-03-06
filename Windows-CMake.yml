@@ -5,7 +5,6 @@ env:
   GH_TOKEN: ${{github.token}}
   Branch: ${{github.ref_name}}
   Platform: Any CPU #Win32|x86|x64 - Check .sln file for available ones
-  Configuration: Release
   Artifacts: build/Release
   Title: ${{github.event.repository.name}}
   Executable: ${{github.event.repository.name}}.exe # *
@@ -174,10 +173,10 @@ jobs:
 #      shell: cmd
 #      run: |
 #        windeployqt.exe "${{github.workspace}}/${{env.Artifacts}}/${{env.Executable}}"
-#        If exist "vcpkg\installed\${{env.Platform}}-windows\bin\*.dll" (copy "vcpkg\installed\${{env.Platform}}-windows\bin\*.dll" "${{env.Artifacts}}")
-#        If exist "vcpkg_installed\${{env.Platform}}-windows\bin\*.dll" (copy "vcpkg_installed\${{env.Platform}}-windows\bin\*.dll" "${{env.Artifacts}}")
-#        If exist "vcpkg\installed\${{env.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg\installed\${{env.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
-#        If exist "vcpkg_installed\${{env.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg_installed\${{env.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
+#        If exist "vcpkg\installed\${{matrix.Settings.Platform}}-windows\bin\*.dll"       (copy "vcpkg\installed\${{matrix.Settings.Platform}}-windows\bin\*.dll"       "${{env.Artifacts}}")
+#        If exist "vcpkg_installed\${{matrix.Settings.Platform}}-windows\bin\*.dll"       (copy "vcpkg_installed\${{matrix.Settings.Platform}}-windows\bin\*.dll"       "${{env.Artifacts}}")
+#        If exist "vcpkg\installed\${{matrix.Settings.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg\installed\${{matrix.Settings.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
+#        If exist "vcpkg_installed\${{matrix.Settings.Platform}}-windows\debug\bin\*.dll" (copy "vcpkg_installed\${{matrix.Settings.Platform}}-windows\debug\bin\*.dll" "${{env.Artifacts}}")
 #        xcopy "assets\" "${{env.Artifacts}}\assets\" /s
 
     - name: Upload artifacts
