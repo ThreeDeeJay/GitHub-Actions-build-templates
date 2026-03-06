@@ -186,7 +186,6 @@ jobs:
         name: ${{env.Title}}-${{matrix.Settings.Name}}-${{matrix.Configuration}}
         path: "${{github.workspace}}/${{env.Artifacts}}/"
 
-
   Release:
     name: Release
     runs-on: windows-latest
