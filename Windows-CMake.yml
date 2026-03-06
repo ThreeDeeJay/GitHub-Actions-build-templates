@@ -149,7 +149,7 @@ jobs:
         cmake
         -A "${{matrix.Settings.Platform}}"
         -B "${{github.workspace}}/build"
-        -DCMAKE_BUILD_TYPE="${{matrix.Settings.Configuration}}"
+        -DCMAKE_BUILD_TYPE="${{matrix.Configuration}}"
 
     - name: Configure
       run: >
@@ -163,7 +163,7 @@ jobs:
       run: >
         cmake
         --build "${{github.workspace}}/build"
-        --config "${{matrix.Settings.Configuration}}"
+        --config "${{matrix.Configuration}}"
 
     - name: List files
       run: ls -R
