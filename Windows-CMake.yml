@@ -146,6 +146,10 @@ jobs:
 #      run: |
 #        vcpkg install 
 
+#    - name: Download Dependencies
+#      run: |
+#        curl --create-dirs -L "https://raw.githubusercontent.com/OWNER/REPO/refs/heads/BRANCH/PATH/TO/FILE.EXTENSION" -o "PATH/TO/FILE.EXTENSION"
+
     - name: Configure
       run: >
         cmake
