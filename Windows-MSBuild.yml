@@ -149,7 +149,7 @@ jobs:
 
 #    - name: Download Dependencies
 #      run: |
-#        curl --create-dirs -L "https://raw.githubusercontent.com/OWNER/REPO/refs/heads/BRANCH/PATH/TO/FILE.EXTENSION" -o "PATH/TO/FILE.EXTENSION"
+#        curl --ssl-revoke-best-effort --create-dirs -L "https://raw.githubusercontent.com/OWNER/REPO/refs/heads/BRANCH/PATH/TO/FILE.EXTENSION" -o "PATH/TO/FILE.EXTENSION"
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
