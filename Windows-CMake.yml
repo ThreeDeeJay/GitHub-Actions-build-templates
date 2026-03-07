@@ -152,7 +152,7 @@ jobs:
         -A "${{matrix.Settings.Platform}}"
         -B "${{github.workspace}}/build"
         -DCMAKE_BUILD_TYPE=${{matrix.Configuration}}
-#-DCMAKE_PREFIX_PATH=vcpkg\installed\${{matrix.Settings.Triplet}}
+        -DCMAKE_PREFIX_PATH=vcpkg\installed\${{matrix.Settings.Triplet}}
 
     - name: Build
       run: >
