@@ -104,14 +104,20 @@ jobs:
 #      id: cache-cuda
 #      uses: actions/cache@v5
 #      with:
-#        path: "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.1"
-#        key: CUDA
+#        path: "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.1"
+#        key: CUDA_V10_1
+#    - name: Download CUDA
+#      if: steps.cache-cuda.outputs.cache-hit != 'true'
+#      run: |
+#        curl -L --ssl-revoke-best-effort "https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe" -o "CUDA.exe"
 #    - name: Install CUDA
 #      if: steps.cache-cuda.outputs.cache-hit != 'true'
-#      shell: powershell
 #      run: |
-#        Invoke-WebRequest -Method Get -Uri https://developer.download.nvidia.com/compute/cuda/13.1.1/local_installers/cuda_13.1.1_windows.exe -OutFile CUDA.exe -UseBasicParsing
-#        Start-Process -Wait -NoNewWindow ./CUDA.exe -ArgumentList "-s"
+#        Start-Process -Wait "CUDA.exe" -ArgumentList "-s"
+#    - name: Set CUDA path
+#      run: |
+#        echo "CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1" >> $env:GITHUB_ENV
+#        echo "CUDA_PATH_V10_1=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1" >> $env:GITHUB_ENV
 # NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
 #    - name: Install TortoiseSVN
