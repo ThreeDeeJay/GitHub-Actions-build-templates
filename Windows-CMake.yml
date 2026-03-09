@@ -226,21 +226,18 @@ jobs:
 #        uses: actions/download-artifact@v4
 #        with:
 #          name: ${{env.Title}}-Win32-Release
-#          path: Artifacts/Win32/
+#          path: Release/Win32/
 
       - name: Download Artifacts - Win64
         uses: actions/download-artifact@v4
         with:
           name: ${{env.Title}}-Win64-Release
-          path: Artifacts/Win64/
+          path: Release/Win64/
 
       - name: Deploy
         run: |
-          mkdir "Release"
           cp "README.md" "Release/ReadMe.txt"
           cp "LICENSE" "Release/License.txt"
-          cp -r "Artifacts/Win64" "Release"
-#          cp -r "Artifacts/Win32" "Release"
   
       - name: Compress artifacts
         if: github.event_name == 'push'
