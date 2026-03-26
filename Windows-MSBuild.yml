@@ -185,7 +185,6 @@ jobs:
         msbuild
         /m "${{env.Solution}}"
         /p:Configuration="${{matrix.Configuration}}"
-        /p:OutputPath="${{env.Artifacts}}"
 #/p:Platform="${{matrix.Settings.Platform}}"
 #/p:PlatformToolset=v143
 #/p:IncludePath="C:\Path\to\Include"
@@ -194,6 +193,7 @@ jobs:
 #/p:AdditionalLibraryDirectories="C:\Path\to\external\lib"
 #/p:AdditionalDependencies=file.lib
 #/p:LanguageStandard="stdcpp17"
+#/p:OutputPath="${{env.Artifacts}}"
 
 #    - name: Publish
 #      run: > 
