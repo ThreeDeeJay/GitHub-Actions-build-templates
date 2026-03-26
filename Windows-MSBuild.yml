@@ -217,7 +217,7 @@ jobs:
 #        If exist "vcpkg_installed\${{matrix.Settings.Triplet}}\bin\*.dll"       (copy "vcpkg_installed\${{matrix.Settings.Triplet}}\bin\*.dll"       "${{env.Artifacts}}")
 #        If exist "vcpkg\installed\${{matrix.Settings.Triplet}}\debug\bin\*.dll" (copy "vcpkg\installed\${{matrix.Settings.Triplet}}\debug\bin\*.dll" "${{env.Artifacts}}")
 #        If exist "vcpkg_installed\${{matrix.Settings.Triplet}}\debug\bin\*.dll" (copy "vcpkg_installed\${{matrix.Settings.Triplet}}\debug\bin\*.dll" "${{env.Artifacts}}")
-#        move "assets" "${{env.Artifacts}}" /s
+#        move "assets" "${{env.Artifacts}}"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
