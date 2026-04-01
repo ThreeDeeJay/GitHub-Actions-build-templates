@@ -152,13 +152,20 @@ jobs:
 #        python --version
 # NOTE: ADD THE LAST 3 LINES ABOVE RIGHT BEFORE MSBUILD IN THE BUILD STEP TO SWITCH AND CHECK PYTHON VERSION
 
-#    - name: Install vcpkg
-#      uses: lukka/run-vcpkg@v11.5
+#    - name: Cache vcpkg
+#      uses: actions/cache@v5
+#      id: cache_vcpkg
 #      with:
-#        vcpkgGitCommitId: c2aeddd80357b17592e59ad965d2adf65a19b22f
-#    - name: Install dependencies
+#        path: vcpkg
+#        key: vcpkg-${{hashFiles('**/CMakeLists.txt')}}
+#    - name: vcpkg
+#      if: steps.cache_vcpkg != 'true'
 #      run: |
-#        vcpkg install --triplet ${{matrix.Settings.Triplet}}
+#        git clone https://github.com/microsoft/vcpkg.git --depth 1
+#        ./vcpkg/bootstrap-vcpkg.bat
+#        vcpkg install ADD_SPACE_SEPARATED_VCPKG_PACKAGE_NAMES_HERE --triplet ${{matrix.Settings.Triplet}}
+#      - name: List files
+#        run: ls "C:/vcpkg/packages" -R
 
 #    - name: Download Dependencies
 #      run: |
