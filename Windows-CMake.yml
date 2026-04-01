@@ -171,19 +171,38 @@ jobs:
 #      run: |
 #        curl --ssl-revoke-best-effort --create-dirs -L "https://raw.githubusercontent.com/OWNER/REPO/refs/heads/BRANCH/PATH/TO/FILE.EXTENSION" -o "PATH/TO/FILE.EXTENSION"
 
+#    - name: Cache vcpkg
+#      uses: actions/cache@v5
+#      id: cache_vcpkg
+#      with:
+#        path: C:/vcpkg/installed
+#        key: vcpkg
+#    - name: vcpkg
+#      if: steps.cache_vcpkg.outputs.cache-hit != 'true'
+#      run: |
+#        vcpkg install ADD_SPACE_SEPARATED_VCPKG_PACKAGE_NAMES_HERE --triplet ${{matrix.Settings.Triplet}}
+#    - name: List vcpkg files
+#      run: Get-ChildItem -Path "C:\vcpkg" -File -Recurse | Select-Object FullName
+
     - name: Configure
       run: >
         cmake
         -A "${{matrix.Settings.Platform}}"
         -B "${{github.workspace}}/build"
         -DCMAKE_BUILD_TYPE=${{matrix.Configuration}}
-        -DCMAKE_PREFIX_PATH=vcpkg\installed\${{matrix.Settings.Triplet}}
+        -DCMAKE_PREFIX_PATH=C:\vcpkg\installed\${{matrix.Settings.Triplet}}
+#        -DSOMELIBRARY_INCLUDE_DIRS=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\include\SOMELIBRARY
+#        -DSOMELIBRARY_LIB=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\lib\SOMELIBRARY.lib
 
     - name: Build
       run: >
         cmake
         --build "${{github.workspace}}/build"
         --config "${{matrix.Configuration}}"
+        -DCMAKE_BUILD_TYPE=${{matrix.Configuration}}
+        -DCMAKE_PREFIX_PATH=C:\vcpkg\installed\${{matrix.Settings.Triplet}}
+        -DONNX_RUNTIME_SESSION_INCLUDE_DIRS=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\include\onnxruntime
+        -DONNX_RUNTIME_LIB=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\lib\onnxruntime.lib
 
     - name: List files
       run: ls -R
