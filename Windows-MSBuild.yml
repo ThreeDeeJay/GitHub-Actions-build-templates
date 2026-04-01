@@ -153,24 +153,22 @@ jobs:
 #        python --version
 # NOTE: ADD THE LAST 3 LINES ABOVE RIGHT BEFORE MSBUILD IN THE BUILD STEP TO SWITCH AND CHECK PYTHON VERSION
 
+#    - name: Download Dependencies
+#      run: |
+#        curl --ssl-revoke-best-effort --create-dirs -L "https://raw.githubusercontent.com/OWNER/REPO/refs/heads/BRANCH/PATH/TO/FILE.EXTENSION" -o "PATH/TO/FILE.EXTENSION"
+
 #    - name: Cache vcpkg
 #      uses: actions/cache@v5
 #      id: cache_vcpkg
 #      with:
-#        path: vcpkg
-#        key: vcpkg-${{hashFiles('**/CMakeLists.txt')}}
+#        path: C:/vcpkg/installed
+#        key: vcpkg
 #    - name: vcpkg
-#      if: steps.cache_vcpkg != 'true'
+#      if: steps.cache_vcpkg.outputs.cache-hit != 'true'
 #      run: |
-#        git clone https://github.com/microsoft/vcpkg.git --depth 1
-#        ./vcpkg/bootstrap-vcpkg.bat
 #        vcpkg install ADD_SPACE_SEPARATED_VCPKG_PACKAGE_NAMES_HERE --triplet ${{matrix.Settings.Triplet}}
-#      - name: List files
-#        run: ls "C:/vcpkg/packages" -R
-
-#    - name: Download Dependencies
-#      run: |
-#        curl --ssl-revoke-best-effort --create-dirs -L "https://raw.githubusercontent.com/OWNER/REPO/refs/heads/BRANCH/PATH/TO/FILE.EXTENSION" -o "PATH/TO/FILE.EXTENSION"
+#    - name: List vcpkg files
+#      run: Get-ChildItem -Path "C:\vcpkg" -File -Recurse | Select-Object FullName
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
@@ -184,8 +182,8 @@ jobs:
         msbuild
         /m "${{env.Solution}}"
         /p:Configuration="${{matrix.Configuration}}"
+        /p:PlatformToolset=v143
 #/p:Platform="${{matrix.Settings.Platform}}"
-#/p:PlatformToolset=v143
 #/p:IncludePath="C:\Path\to\Include"
 #/p:LibPath="C:\Path\to\Lib"
 #/p:AdditionalIncludePaths="C:\Path\to\external\include"
