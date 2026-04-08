@@ -248,7 +248,7 @@ jobs:
 #        action: build
       
     - name: List files
-      run: ls -R
+      run: Get-ChildItem -File -Recurse | Select-Object FullName
 
 #    - name: Deploy
 #      shell: cmd
