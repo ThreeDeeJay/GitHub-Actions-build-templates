@@ -10,6 +10,18 @@ env:
   Executable: ${{github.event.repository.name}}.exe # *
 #  DXSDK_DIR: C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\
 #  VULKAN_VERSION: 1.1.130.0
+#  CUDA_VERSION_MAJOR: 12
+#  CUDA_VERSION_MINOR: 9
+#  CUDA_VERSION_PATCH: 1
+#  CUDA_DRIVER_VERSION: 576.57
+#  TENSORRT_VERSION_MAJOR: 10
+#  TENSORRT_VERSION_MINOR: 16
+#  TENSORRT_VERSION_PATCH: 0
+#  TENSORRT_VERSION_BUILD: 72
+#  TENSORRT_RTX_VERSION_MAJOR: 1
+#  TENSORRT_RTX_VERSION_MINOR: 4
+#  TENSORRT_RTX_VERSION_PATCH: 0
+#  TENSORRT_RTX_VERSION_BUILD: 76
 
 on:
   push:
@@ -93,40 +105,72 @@ jobs:
 #        Start-Process -Wait ./VulkanSDK.exe -ArgumentList "/S", "--accept-licenses", "--default-answer", "--confirm-command install", "com.lunarg.vulkan.sdl2", "com.lunarg.vulkan.glm"
 # NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
+#    - name: Get Visual Studio path
+#      run: |
+#        vswhere.exe -property installationPath
+#        echo "VS_PATH=$(vswhere.exe -property installationPath)" >> $env:GITHUB_ENV
 #    - name: Cache CUDA
 #      id: cache-cuda
 #      uses: actions/cache@v5
 #      with:
-#        path: "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.1"
-#        key: CUDA_V10_1
+#        path: "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}"
+#        key: CUDA_V${{env.CUDA_VERSION_MAJOR}}_${{env.CUDA_VERSION_MINOR}}
 #    - name: Download CUDA
 #      if: steps.cache-cuda.outputs.cache-hit != 'true'
 #      run: |
-#        curl --ssl-revoke-best-effort -L "https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe" -o "CUDA.exe"
+#        curl --ssl-revoke-best-effort --fail -L "https://developer.download.nvidia.com/compute/cuda/${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}.${{env.CUDA_VERSION_PATCH}}/local_installers/cuda_${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}.${{env.CUDA_VERSION_PATCH}}_${{env.CUDA_DRIVER_VERSION}}_windows.exe" -o "CUDA.exe" || true
+#        curl --ssl-revoke-best-effort --fail -L "https://developer.download.nvidia.com/compute/cuda/${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}.${{env.CUDA_VERSION_PATCH}}/local_installers/cuda_${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}.${{env.CUDA_VERSION_PATCH}}_windows.exe" -o "CUDA.exe" || true
 #    - name: Install CUDA
 #      if: steps.cache-cuda.outputs.cache-hit != 'true'
 #      run: |
 #        Start-Process -Wait "CUDA.exe" -ArgumentList "-s"
 #    - name: Set CUDA path
 #      run: |
-#        echo "CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1" >> $env:GITHUB_ENV
-#        echo "CUDA_PATH_V10_1=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1" >> $env:GITHUB_ENV
-# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
-
+#        echo "CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}" >> $env:GITHUB_ENV
+#        echo "CUDA_PATH_V${{env.CUDA_VERSION_MAJOR}}_${{env.CUDA_VERSION_MINOR}}=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}" >> $env:GITHUB_ENV
+#        echo "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}" >> $env:GITHUB_ENV
+#        echo "PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}\bin\x64;$Env:Path" >> $env:GITHUB_ENV
+#    - name: CUDA Visual Studio integration
+#      if: steps.cache-cuda.outputs.cache-hit != 'false'
+#      run: |
+#        copy "${{env.CUDA_PATH}}\extras\visual_studio_integration\MSBuildExtensions\*" "${{env.VS_PATH}}\MSBuild\Microsoft\VC\v160\BuildCustomizations"
+#        copy "${{env.CUDA_PATH}}\extras\visual_studio_integration\MSBuildExtensions\*" "${{env.VS_PATH}}\MSBuild\Microsoft\VC\v170\BuildCustomizations"
+#    - name: List CUDA Visual Studio integration files
+#      run: |
+#        ls -R "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}\extras\visual_studio_integration\MSBuildExtensions"
+#        ls -R "${{env.VS_PATH}}\MSBuild\Microsoft\VC\v160\BuildCustomizations"
+#        ls -R "${{env.VS_PATH}}\MSBuild\Microsoft\VC\v170\BuildCustomizations"
 #    - name: Cache cuDNN
 #      id: cache-cudnn
 #      uses: actions/cache@v5
 #      with:
-#        path: "C:\\Program Files\\NVIDIA\\CUDNN\\v9.19"
-#        key: CUDNN_V9_19
+#        path: "C:\\Program Files\\NVIDIA\\CUDNN\\v9.20"
+#        key: CUDNN_V9_20
 #    - name: Download cuDNN
 #      if: steps.cache-cudnn.outputs.cache-hit != 'true'
 #      run: |
-#        curl --ssl-revoke-best-effort -L "https://developer.download.nvidia.com/compute/cudnn/9.19.1/local_installers/cudnn_9.19.1_windows_x86_64.exe" -o "cuDNN.exe"
+#        curl --ssl-revoke-best-effort -L "https://developer.download.nvidia.com/compute/cudnn/9.20.0/local_installers/cudnn_9.20.0_windows_x86_64.exe" -o "cuDNN.exe"
 #    - name: Install cuDNN
 #      if: steps.cache-cudnn.outputs.cache-hit != 'true'
 #      run: |
 #        Start-Process -Wait "cuDNN.exe" -ArgumentList "-s"
+#    - name: Set cuDNN path
+#      run: |
+#        echo "CUDNN_PATH=C:\Program Files\NVIDIA\CUDNN\v9.20" >> $env:GITHUB_ENV
+#        echo "CUDNN_HOME=C:\Program Files\NVIDIA\CUDNN\v9.20" >> $env:GITHUB_ENV
+#        Add-Content -Path $env:GITHUB_PATH -Value "C:\Program Files\NVIDIA\CUDNN\v9.20\bin\${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}\x64"
+#        echo "PATH=$Env:Path" >> $env:GITHUB_ENV
+#    - name: Download TensorRT
+#      run: |
+#        curl --ssl-revoke-best-effort --create-dirs -L "https://developer.download.nvidia.com/compute/machine-learning/tensorrt/${{env.TENSORRT_VERSION_MAJOR}}.${{env.TENSORRT_VERSION_MINOR}}.${{env.TENSORRT_VERSION_PATCH}}/zip/TensorRT-${{env.TENSORRT_VERSION_MAJOR}}.${{env.TENSORRT_VERSION_MINOR}}.${{env.TENSORRT_VERSION_PATCH}}.${{env.TENSORRT_VERSION_BUILD}}.Windows.amd64.cuda-${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}.zip" -o "TensorRT.zip" || true
+#        7z x "TensorRT.zip"
+#        Add-Content -Path $env:GITHUB_PATH -Value "${{github.workspace}}\TensorRT-${{env.TENSORRT_VERSION_MAJOR}}.${{env.TENSORRT_VERSION_MINOR}}.${{env.TENSORRT_VERSION_PATCH}}.${{env.TENSORRT_VERSION_BUILD}}\bin"
+#    - name: Download TensorRT RTX
+#      run: |
+#        curl --ssl-revoke-best-effort --fail --create-dirs -L "https://developer.nvidia.com/downloads/trt/rtx_sdk/secure/${{env.TENSORRT_RTX_VERSION_MAJOR}}.${{env.TENSORRT_RTX_VERSION_MINOR}}/TensorRT-RTX-${{env.TENSORRT_RTX_VERSION_MAJOR}}.${{env.TENSORRT_RTX_VERSION_MINOR}}.${{env.TENSORRT_RTX_VERSION_PATCH}}.${{env.TENSORRT_RTX_VERSION_BUILD}}.Windows.win10.cuda-${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}.zip" -o "TensorRT-RTX.zip" || true
+#        curl --ssl-revoke-best-effort --fail --create-dirs -L "https://developer.nvidia.com/downloads/trt/rtx_sdk/secure/${{env.TENSORRT_RTX_VERSION_MAJOR}}.${{env.TENSORRT_RTX_VERSION_MINOR}}/TensorRT-RTX-${{env.TENSORRT_RTX_VERSION_MAJOR}}.${{env.TENSORRT_RTX_VERSION_MINOR}}.${{env.TENSORRT_RTX_VERSION_PATCH}}.${{env.TENSORRT_RTX_VERSION_BUILD}}-Windows-amd64-cuda-${{env.CUDA_VERSION_MAJOR}}.${{env.CUDA_VERSION_MINOR}}-Release-external.zip" -o "TensorRT-RTX.zip" || true
+#        7z x "TensorRT-RTX.zip"
+#        Add-Content -Path $env:GITHUB_PATH -Value "${{github.workspace}}\TensorRT-RTX-${{env.TENSORRT_RTX_VERSION_MAJOR}}.${{env.TENSORRT_RTX_VERSION_MINOR}}.${{env.TENSORRT_RTX_VERSION_PATCH}}.${{env.TENSORRT_RTX_VERSION_BUILD}}\lib"
 # NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
 #    - name: Install TortoiseSVN
