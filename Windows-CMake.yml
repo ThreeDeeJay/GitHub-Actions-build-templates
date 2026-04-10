@@ -228,10 +228,6 @@ jobs:
         cmake
         --build "${{github.workspace}}/build"
         --config "${{matrix.Configuration}}"
-        -DCMAKE_BUILD_TYPE=${{matrix.Configuration}}
-        -DCMAKE_PREFIX_PATH=C:\vcpkg\installed\${{matrix.Settings.Triplet}}
-        -DONNX_RUNTIME_SESSION_INCLUDE_DIRS=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\include\onnxruntime
-        -DONNX_RUNTIME_LIB=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\lib\onnxruntime.lib
 
     - name: List files
       run: Get-ChildItem -Path "." -File -Recurse | Select-Object FullName
