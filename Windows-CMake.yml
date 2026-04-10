@@ -5,6 +5,7 @@ env:
   GH_TOKEN: "${{github.token}}"
   Branch: "${{github.ref_name}}"
   Artifacts: "build/Release"
+  Extension: "*" # "*.exe" # "*.dll"
   Title: "${{github.event.repository.name}}"
   Executable: "${{github.event.repository.name}}.exe" # *
 #  DXSDK_DIR: "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\"
@@ -246,7 +247,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{env.Title}}-${{matrix.Settings.Name}}-${{matrix.Configuration}}
-        path: "${{github.workspace}}/${{env.Artifacts}}/"
+        path: "${{github.workspace}}/${{env.Artifacts}}/${{env.Extension}}"
 
   Release:
     name: Release
