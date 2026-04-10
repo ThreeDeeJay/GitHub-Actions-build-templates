@@ -224,7 +224,6 @@ jobs:
 #        -DSOMELIBRARY_INCLUDE_DIRS=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\include\SOMELIBRARY
 #        -DSOMELIBRARY_LIB=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\lib\SOMELIBRARY.lib
 
-
     - name: Build
       run: >
         cmake
