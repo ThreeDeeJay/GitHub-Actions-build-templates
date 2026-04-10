@@ -2,25 +2,25 @@
 name: Build
 
 env:
-  GH_TOKEN: ${{github.token}}
-  Branch: ${{github.ref_name}}
-  Artifacts: build/Release
-  Title: ${{github.event.repository.name}}
-  Executable: ${{github.event.repository.name}}.exe # *
-#  DXSDK_DIR: C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\
-#  VULKAN_VERSION: 1.1.130.0
-#  CUDA_VERSION_MAJOR: 12
-#  CUDA_VERSION_MINOR: 9
-#  CUDA_VERSION_PATCH: 1
-#  CUDA_DRIVER_VERSION: 576.57
-#  TENSORRT_VERSION_MAJOR: 10
-#  TENSORRT_VERSION_MINOR: 16
-#  TENSORRT_VERSION_PATCH: 0
-#  TENSORRT_VERSION_BUILD: 72
-#  TENSORRT_RTX_VERSION_MAJOR: 1
-#  TENSORRT_RTX_VERSION_MINOR: 4
-#  TENSORRT_RTX_VERSION_PATCH: 0
-#  TENSORRT_RTX_VERSION_BUILD: 76
+  GH_TOKEN: "${{github.token}}"
+  Branch: "${{github.ref_name}}"
+  Artifacts: "build/Release"
+  Title: "${{github.event.repository.name}}"
+  Executable: "${{github.event.repository.name}}.exe" # *
+#  DXSDK_DIR: "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\"
+#  VULKAN_VERSION: "1.1.130.0"
+#  CUDA_VERSION_MAJOR: "12"
+#  CUDA_VERSION_MINOR: "9"
+#  CUDA_VERSION_PATCH: "1"
+#  CUDA_DRIVER_VERSION: "576.57"
+#  TENSORRT_VERSION_MAJOR: "10"
+#  TENSORRT_VERSION_MINOR: "16"
+#  TENSORRT_VERSION_PATCH: "0"
+#  TENSORRT_VERSION_BUILD: "72"
+#  TENSORRT_RTX_VERSION_MAJOR: "1"
+#  TENSORRT_RTX_VERSION_MINOR: "4"
+#  TENSORRT_RTX_VERSION_PATCH: "0"
+#  TENSORRT_RTX_VERSION_BUILD: "76"
 
 on:
   push:
