@@ -51,7 +51,7 @@ jobs:
             Architecture: "x64",
             Triplet: "x64-windows"
           }
-          
+
     steps:
 
     - name: Clone repo and submodules
