@@ -39,6 +39,7 @@ jobs:
       matrix:
         Configuration: [Release] #[Release, Debug]
         Settings:
+# ENABLE SECOND ARCHITECTURE ONLY AFTER THE FIRST BUILD SUCCEEDS
 #        - {
 #            Name: "Win32",
 #            Platform: "Win32",
