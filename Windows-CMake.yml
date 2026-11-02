@@ -9,7 +9,7 @@ env:
   Title: "${{github.event.repository.name}}"
   Executable: "${{github.event.repository.name}}.exe" # *
 #  DXSDK_DIR: "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\"
-#  VULKAN_VERSION: "1.1.130.0"
+#  VULKAN_VERSION: "1.3.296.0"
 #  CUDA_VERSION_MAJOR: "12"
 #  CUDA_VERSION_MINOR: "9"
 #  CUDA_VERSION_PATCH: "1"
@@ -91,19 +91,20 @@ jobs:
 #      run: echo "DXSDK_DIR=C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\" >> $env:GITHUB_ENV
 # NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
-#    - name: Cache Vulkan SDK
-#      id: cache-vulkan-sdk
-#      uses: actions/cache@v5
+#    - name: Cache DirectX SDK
+#      id: DXSDK_Jun10
+#      uses: actions/cache@v4
 #      with:
-#        path: "C:\\VulkanSDK\\${{env.VULKAN_VERSION}}"
-#        key: VulkanSDK
-#    - name: Install Vulkan SDK
-#      if: steps.cache-vulkan-sdk.outputs.cache-hit != 'true'
+#        path: ${{env.DXSDK_DIR}}
+#        key: DXSDK_Jun10
+#    - name: Install DirectX SDK
+#      if: steps.DXSDK_Jun10.outputs.cache-hit != 'true'
 #      shell: powershell
 #      run: |
-#        echo "VULKAN_SDK=C:\VulkanSDK\${{env.VULKAN_VERSION}}" >> $env:GITHUB_ENV
-#        Invoke-WebRequest -Method Get -Uri https://web.archive.org/web/20200413110014if_/https://sdk.lunarg.com/sdk/download/${{env.VULKAN_VERSION}}/windows/VulkanSDK-${{env.VULKAN_VERSION}}-Installer.exe -OutFile VulkanSDK.exe -UseBasicParsing
-#        Start-Process -Wait ./VulkanSDK.exe -ArgumentList "/S", "--accept-licenses", "--default-answer", "--confirm-command install", "com.lunarg.vulkan.sdl2", "com.lunarg.vulkan.glm"
+#        Invoke-WebRequest -Method Get -Uri https://download.microsoft.com/download/a/e/7/ae743f1f-632b-4809-87a9-aa1bb3458e31/DXSDK_Jun10.exe -OutFile DXSDK_Jun10.exe -UseBasicParsing
+#        Start-Process -Wait ./DXSDK_Jun10.exe -ArgumentList "/U"
+#    - name: Set DXSDK_DIR
+#      run: echo "DXSDK_DIR=C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\" >> $env:GITHUB_ENV
 # NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
 #    - name: Get Visual Studio path
