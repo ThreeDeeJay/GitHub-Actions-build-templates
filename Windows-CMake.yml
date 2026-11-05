@@ -108,6 +108,25 @@ jobs:
 #      run: echo "DXSDK_DIR=C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\" >> $env:GITHUB_ENV
 # NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
 
+#    - name: Cache Vulkan SDK
+#      id: cache-vulkan-sdk
+#      uses: actions/cache@v5
+#      with:
+#        path: "C:\\VulkanSDK\\${{env.VULKAN_VERSION}}"
+#        key: VulkanSDK-${{env.VULKAN_VERSION}}
+#    - name: Install Vulkan SDK
+#      if: steps.cache-vulkan-sdk.outputs.cache-hit != 'true'
+#      shell: cmd
+#      run: |
+#        curl --ssl-revoke-best-effort --fail -L "https://sdk.lunarg.com/sdk/download/${{env.VULKAN_VERSION}}/windows/VulkanSDK-${{env.VULKAN_VERSION}}-Installer.exe" -o "VulkanSDK.exe" || true
+#        curl --ssl-revoke-best-effort --fail -L "https://sdk.lunarg.com/sdk/download/${{env.VULKAN_VERSION}}/windows/vulkansdk-windows-X64-${{env.VULKAN_VERSION}}.exe" -o "VulkanSDK.exe" || true
+#        VulkanSDK.exe --accept-licenses --default-answer --confirm-command install com.lunarg.vulkan.32bit
+#    - name: Set VULKAN_SDK
+#      shell: pwsh
+#      run: |
+#        [System.IO.File]::AppendAllText($env:GITHUB_ENV, "VULKAN_SDK=C:\VulkanSDK\${{env.VULKAN_VERSION}}" + [Environment]::NewLine)
+# NOTE: STORING CACHE REQUIRES THE RUN TO SUCCEED, SO IF IT'S FAILING, TRY TEMPORARILY REMOVING ALL THE STEPS BELOW THIS LINE
+
 #    - name: Get Visual Studio path
 #      run: |
 #        vswhere.exe -property installationPath
