@@ -242,7 +242,7 @@ jobs:
         -A "${{matrix.Settings.Platform}}"
         -B "${{github.workspace}}/build"
         -DCMAKE_BUILD_TYPE=${{matrix.Configuration}}
-        -DCMAKE_PREFIX_PATH=C:\vcpkg\installed\${{matrix.Settings.Triplet}}
+#        -DCMAKE_PREFIX_PATH=C:\vcpkg\installed\${{matrix.Settings.Triplet}}
 #        -DSOMELIBRARY_INCLUDE_DIRS=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\include\SOMELIBRARY
 #        -DSOMELIBRARY_LIB=C:\vcpkg\installed\${{matrix.Settings.Triplet}}\lib\SOMELIBRARY.lib
 
